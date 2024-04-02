@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: mysql-kim.alwaysdata.net
--- Generation Time: Dec 09, 2023 at 11:26 PM
--- Server version: 10.6.14-MariaDB
--- PHP Version: 7.4.33
+-- Hôte : 127.0.0.1
+-- Généré le : lun. 04 mars 2024 à 10:21
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,19 +18,19 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `kim_supercar`
+-- Base de données : `supercar`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procédures
 --
-CREATE DEFINER=`kim`@`%` PROCEDURE `GetClientsByCarBrand` (IN `carBrand` VARCHAR(50))   BEGIN
-    SELECT c.*
-FROM client c
-INNER JOIN demande_essai de ON c.id = de.id_client
-INNER JOIN voiture v ON de.id_voiture = v.id_voiture
-WHERE v.marque COLLATE utf8mb4_general_ci = carBrand COLLATE utf8mb4_general_ci;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetClientsByCarBrand` (IN `carBrand` VARCHAR(50))   BEGIN
+ SELECT c.*
+ FROM client c
+ INNER JOIN demande_essai de ON c.id = de.id_client
+ INNER JOIN voiture v ON de.id_voiture = v.id_voiture
+ WHERE v.marque COLLATE utf8mb4_general_ci = carBrand COLLATE utf8mb4_general_ci;
 END$$
 
 DELIMITER ;
@@ -38,7 +38,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
+-- Structure de la table `admin`
 --
 
 CREATE TABLE `admin` (
@@ -50,7 +50,7 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `admin`
+-- Déchargement des données de la table `admin`
 --
 
 INSERT INTO `admin` (`id_admin`, `nom_admin`, `username_admin`, `motdepasse_admin`, `acces`) VALUES
@@ -60,7 +60,7 @@ INSERT INTO `admin` (`id_admin`, `nom_admin`, `username_admin`, `motdepasse_admi
 -- --------------------------------------------------------
 
 --
--- Table structure for table `client`
+-- Structure de la table `client`
 --
 
 CREATE TABLE `client` (
@@ -74,7 +74,7 @@ CREATE TABLE `client` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `client`
+-- Déchargement des données de la table `client`
 --
 
 INSERT INTO `client` (`id`, `name`, `prenom`, `telephone`, `adresse`, `email`, `password_hash`) VALUES
@@ -84,7 +84,7 @@ INSERT INTO `client` (`id`, `name`, `prenom`, `telephone`, `adresse`, `email`, `
 (9, 'RATOMAHENINA', 'Dimbihasimbola Stevine Kim', 52740595, '1 Avenue Doyen Quatre-Bornes', 'dratomahenina@gmail.com', 'Azerty11');
 
 --
--- Triggers `client`
+-- Déclencheurs `client`
 --
 DELIMITER $$
 CREATE TRIGGER `after_login_trigger` AFTER INSERT ON `client` FOR EACH ROW BEGIN
@@ -103,39 +103,38 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact`
+-- Structure de la table `contact`
 --
 
 CREATE TABLE `contact` (
-  `id` int(11) NOT NULL,
+  `id_contact` int(11) NOT NULL,
   `message` text NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp(),
   `id_client` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `contact`
+-- Déchargement des données de la table `contact`
 --
 
-INSERT INTO `contact` (`id`, `message`, `date_created`, `id_client`) VALUES
-(45, 'THIS IS SIMPLE CONTACT', '2023-11-27 06:34:03', 5),
-(46, 'Wesh Albinos', '2023-12-09 19:53:37', 3);
+INSERT INTO `contact` (`id_contact`, `message`, `date_created`, `id_client`) VALUES
+(45, 'THIS IS SIMPLE CONTACT', '2023-11-27 06:34:03', 5);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `debug_info`
+-- Structure de la table `debug_info`
 --
 
 CREATE TABLE `debug_info` (
   `id` int(11) NOT NULL,
   `message` text DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `demande_essai`
+-- Structure de la table `demande_essai`
 --
 
 CREATE TABLE `demande_essai` (
@@ -149,14 +148,13 @@ CREATE TABLE `demande_essai` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `demande_essai`
+-- Déchargement des données de la table `demande_essai`
 --
 
 INSERT INTO `demande_essai` (`id_demande`, `id_voiture`, `date_debut`, `heure`, `commentaire`, `id_client`, `statut`) VALUES
 (2, 8, '2023-05-23', '10:00:00', 'Bonjour, ', 3, 'Validé'),
 (5, 4, '2023-09-29', '10:30:00', 'cc', 3, 'En cours'),
 (6, 1, '2023-09-28', '13:00:00', 'Appelez au moment de la livraison', 3, 'Validé'),
-(7, 5, '2023-09-30', '12:00:00', 'Test', 3, 'En cours'),
 (11, 4, '2023-09-30', '12:00:00', 'Test', 3, 'Validé'),
 (16, 10, '2023-10-18', '14:00:00', 'RAS', 5, 'En cours'),
 (17, 5, '2024-01-18', '12:40:00', 'Je voudrais passer un essai pour cette voiture', 5, 'En cours'),
@@ -168,7 +166,7 @@ INSERT INTO `demande_essai` (`id_demande`, `id_voiture`, `date_debut`, `heure`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `evenements`
+-- Structure de la table `evenements`
 --
 
 CREATE TABLE `evenements` (
@@ -182,7 +180,7 @@ CREATE TABLE `evenements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `evenements`
+-- Déchargement des données de la table `evenements`
 --
 
 INSERT INTO `evenements` (`id_evenements`, `titre`, `type`, `date`, `heure`, `image`, `details`) VALUES
@@ -194,7 +192,7 @@ INSERT INTO `evenements` (`id_evenements`, `titre`, `type`, `date`, `heure`, `im
 -- --------------------------------------------------------
 
 --
--- Table structure for table `journal_connexion`
+-- Structure de la table `journal_connexion`
 --
 
 CREATE TABLE `journal_connexion` (
@@ -206,7 +204,7 @@ CREATE TABLE `journal_connexion` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `marque`
+-- Structure de la table `marque`
 --
 
 CREATE TABLE `marque` (
@@ -216,7 +214,7 @@ CREATE TABLE `marque` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `marque`
+-- Déchargement des données de la table `marque`
 --
 
 INSERT INTO `marque` (`id_marque`, `nom_marque`, `logo`) VALUES
@@ -231,7 +229,7 @@ INSERT INTO `marque` (`id_marque`, `nom_marque`, `logo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `voiture`
+-- Structure de la table `voiture`
 --
 
 CREATE TABLE `voiture` (
@@ -250,7 +248,7 @@ CREATE TABLE `voiture` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `voiture`
+-- Déchargement des données de la table `voiture`
 --
 
 INSERT INTO `voiture` (`id_voiture`, `marque`, `type`, `modele`, `annee`, `image1`, `image2`, `image3`, `image4`, `description`, `prix`, `rating`) VALUES
@@ -265,7 +263,7 @@ INSERT INTO `voiture` (`id_voiture`, `marque`, `type`, `modele`, `annee`, `image
 (10, 'BMW', 'Berline', 'Série 7', 2020, '651b44840c739.jpg', '651b44840c9d3.jpg', '651b448410040.jpg', '6523c2b594b83.jpg', 'Pour 2020, la grande berline de BMW s’offre de légers changements esthétiques ainsi qu’une bonification de l’équipement technologique et l’ajout d’une conduite semi-autonome. Le choix de motorisations varie d’une hybride rechargeable de 389 chevaux à un V12 biturbo de 6,0 litres produisant 600 chevaux, et la transmission intégrale figure de série dans tous les cas. L’habitacle luxueux mise sur une riche sélection de boiseries, de cuirs et de garnitures, que l’on peut rehausser en optant pour l’ensemble BMW Individual.', 5777207, 4);
 
 --
--- Triggers `voiture`
+-- Déclencheurs `voiture`
 --
 DELIMITER $$
 CREATE TRIGGER `before_update_prix_trigger` BEFORE UPDATE ON `voiture` FOR EACH ROW BEGIN
@@ -297,37 +295,37 @@ $$
 DELIMITER ;
 
 --
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `admin`
+-- Index pour la table `admin`
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id_admin`);
 
 --
--- Indexes for table `client`
+-- Index pour la table `client`
 --
 ALTER TABLE `client`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `contact`
+-- Index pour la table `contact`
 --
 ALTER TABLE `contact`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id_contact`),
   ADD KEY `id_client` (`id_client`);
 
 --
--- Indexes for table `debug_info`
+-- Index pour la table `debug_info`
 --
 ALTER TABLE `debug_info`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `demande_essai`
+-- Index pour la table `demande_essai`
 --
 ALTER TABLE `demande_essai`
   ADD PRIMARY KEY (`id_demande`),
@@ -335,107 +333,107 @@ ALTER TABLE `demande_essai`
   ADD KEY `fk_contact_client` (`id_client`);
 
 --
--- Indexes for table `evenements`
+-- Index pour la table `evenements`
 --
 ALTER TABLE `evenements`
   ADD PRIMARY KEY (`id_evenements`);
 
 --
--- Indexes for table `journal_connexion`
+-- Index pour la table `journal_connexion`
 --
 ALTER TABLE `journal_connexion`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_id_utilisateur` (`id_utilisateur`);
 
 --
--- Indexes for table `marque`
+-- Index pour la table `marque`
 --
 ALTER TABLE `marque`
   ADD PRIMARY KEY (`id_marque`);
 
 --
--- Indexes for table `voiture`
+-- Index pour la table `voiture`
 --
 ALTER TABLE `voiture`
   ADD PRIMARY KEY (`id_voiture`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `admin`
+-- AUTO_INCREMENT pour la table `admin`
 --
 ALTER TABLE `admin`
   MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `client`
+-- AUTO_INCREMENT pour la table `client`
 --
 ALTER TABLE `client`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `contact`
+-- AUTO_INCREMENT pour la table `contact`
 --
 ALTER TABLE `contact`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id_contact` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
--- AUTO_INCREMENT for table `debug_info`
+-- AUTO_INCREMENT pour la table `debug_info`
 --
 ALTER TABLE `debug_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `demande_essai`
+-- AUTO_INCREMENT pour la table `demande_essai`
 --
 ALTER TABLE `demande_essai`
   MODIFY `id_demande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `evenements`
+-- AUTO_INCREMENT pour la table `evenements`
 --
 ALTER TABLE `evenements`
   MODIFY `id_evenements` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `journal_connexion`
+-- AUTO_INCREMENT pour la table `journal_connexion`
 --
 ALTER TABLE `journal_connexion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `marque`
+-- AUTO_INCREMENT pour la table `marque`
 --
 ALTER TABLE `marque`
   MODIFY `id_marque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `voiture`
+-- AUTO_INCREMENT pour la table `voiture`
 --
 ALTER TABLE `voiture`
   MODIFY `id_voiture` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- Constraints for dumped tables
+-- Contraintes pour les tables déchargées
 --
 
 --
--- Constraints for table `contact`
+-- Contraintes pour la table `contact`
 --
 ALTER TABLE `contact`
   ADD CONSTRAINT `contact_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `demande_essai`
+-- Contraintes pour la table `demande_essai`
 --
 ALTER TABLE `demande_essai`
   ADD CONSTRAINT `fk_contact_client` FOREIGN KEY (`id_client`) REFERENCES `client` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_demande_essai_voiture` FOREIGN KEY (`id_voiture`) REFERENCES `voiture` (`id_voiture`) ON DELETE CASCADE;
 
 --
--- Constraints for table `journal_connexion`
+-- Contraintes pour la table `journal_connexion`
 --
 ALTER TABLE `journal_connexion`
   ADD CONSTRAINT `fk_id_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `client` (`id`);
